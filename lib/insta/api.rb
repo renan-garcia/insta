@@ -3,10 +3,10 @@ require 'Base64'
 require 'digest/md5'
 require 'net/http'
 require 'json'
-require 'Insta/User'
-require 'Insta/account'
-require 'Insta/feed'
-require 'Insta/Configuration'
+require 'insta/user'
+require 'insta/account'
+require 'insta/feed'
+require 'insta/configuration'
 
 module Insta
   module API

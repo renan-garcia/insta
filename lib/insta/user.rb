@@ -1,6 +1,6 @@
 require 'digest/md5'
-require 'Insta/Device'
-require 'Insta/CONSTANTS'
+require 'insta/device'
+require 'insta/constants'
 
 module Insta
   class User
