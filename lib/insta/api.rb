@@ -1,5 +1,5 @@
 require 'openssl'
-require 'Base64'
+require 'base64'
 require 'digest/md5'
 require 'net/http'
 require 'json'
