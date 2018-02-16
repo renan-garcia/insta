@@ -35,6 +35,10 @@ module Insta
       Insta::Feed.user_media(self, data)
     end
 
+    def user_media_graphql(data = {})
+      Insta::Feed.user_media_graphql(self, data)
+    end
+
     def user_followers(limit = Float::INFINITY, data = {})
       Insta::Feed.user_followers(self, data, limit)
     end

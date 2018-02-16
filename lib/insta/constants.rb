@@ -7,12 +7,13 @@ module Insta
     }.freeze
 
     HEADER = {
-        capabilities: '3QI='.freeze,
-        type: 'WIFI'.freeze,
-        host: 'i.instagram.com'.freeze,
-        connection: 'Close'.freeze,
-        encoding: 'gzip, deflate, sdch'.freeze,
-        accept: '*/*'.freeze
+      user_agent_desktop: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'.freeze,
+      capabilities: '3QI='.freeze,
+      type: 'WIFI'.freeze,
+      host: 'i.instagram.com'.freeze,
+      connection: 'Close'.freeze,
+      encoding: 'gzip, deflate, sdch'.freeze,
+      accept: '*/*'.freeze
     }
 
     URL = 'https://i.instagram.com/api/v1/'.freeze

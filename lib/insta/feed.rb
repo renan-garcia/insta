@@ -15,6 +15,18 @@ module Insta
       JSON.parse result.body
     end
 
+    def self.user_media_graphql(user, data)
+      user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
+      endpoint = "https://www.instagram.com/graphql/query/?query_id=17880160963012870&id=#{user_id}&first=80&after="
+      result = Insta::API.http(
+        url: endpoint,
+        method: 'GET',
+        user: user
+      )
+
+      JSON.parse result.body
+    end
+
     def self.user_followers(user, data, limit)
       has_next_page = true
       followers = []

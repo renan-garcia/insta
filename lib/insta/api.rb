@@ -36,9 +36,31 @@ module Insta
       compute_hash(data) + '.' + data
     end
 
+    def self.http_desktop(args)
+      args[:url] = URI.parse(args[:url])
+      proxy = args.dig(:proxys)&.sample || {}
+      http = Net::HTTP.new(args[:url].host, args[:url].port, proxy.dig(:host), proxy.dig(:port))
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      request = nil
+      if args[:method] == 'POST'
+        request = Net::HTTP::Post.new(args[:url].path)
+      elsif args[:method] == 'GET'
+        request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
+      end
+
+      request.initialize_http_header(:'User-Agent' => Insta::CONSTANTS::HEADER[:user_agent_desktop],
+                                     :Accept => Insta::CONSTANTS::HEADER[:accept],
+                                     :Cookie => (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session))
+
+      request.body = args.key?(:body) ? args[:body] : nil
+      http.request(request)
+    end
+
     def self.http(args)
       args[:url] = URI.parse(args[:url])
-      http = Net::HTTP.new(args[:url].host, args[:url].port, ENV['INSTAGRAM_PROXY_HOST'], ENV['INSTAGRAM_PROXY_PORT'])
+      proxy = args[:proxys].sample
+      http = Net::HTTP.new(args[:url].host, args[:url].port, proxy.dig(:host), proxy.dig(:port))
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = nil

@@ -1,4 +1,4 @@
-# Insta
+# Insta (Pre-Alpha)
 
 Welcome to Insta gem! This Gem is hard fork from [VicoErv/instagram-private-api](https://github.com/VicoErv/instagram-private-api) and the implement from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api) the best `Node-JS` Insgtagram private API
 
