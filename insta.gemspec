@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'insta/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'insta(pre-alpha)'
+  spec.name          = 'insta'
   spec.version       = Insta::VERSION
   spec.authors       = ['Renan Garcia']
   spec.email         = ['email@renangarcia.me']

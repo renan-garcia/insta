@@ -25,7 +25,8 @@ module Insta
         url: endpoint,
         method: 'GET',
         user: user,
-        proxy: proxys&.next
+        proxy: proxys&.next,
+        desktop: true
       )
 
       JSON.parse result.body
