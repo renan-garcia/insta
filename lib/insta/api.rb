@@ -38,8 +38,14 @@ module Insta
 
     def self.http_desktop(args)
       args[:url] = URI.parse(args[:url])
-      proxy = args.dig(:proxys)&.sample || {}
-      http = Net::HTTP.new(args[:url].host, args[:url].port, proxy.dig(:host), proxy.dig(:port))
+      proxy = args[:proxy]
+
+      if proxy
+        http = Net::HTTP::Proxy(proxy.dig(:host), proxy.dig(:port), proxy.dig(:username), proxy.dig(:password)).new(args[:url].host, args[:url].port)
+      else
+        http = Net::HTTP.new(args[:url].host, args[:url].port)
+      end
+
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = nil
@@ -59,8 +65,14 @@ module Insta
 
     def self.http(args)
       args[:url] = URI.parse(args[:url])
-      proxy = args[:proxys].sample
-      http = Net::HTTP.new(args[:url].host, args[:url].port, proxy.dig(:host), proxy.dig(:port))
+      proxy = args[:proxy]
+
+      if proxy
+        http = Net::HTTP::Proxy(proxy.dig(:host), proxy.dig(:port), proxy.dig(:username), proxy.dig(:password)).new(args[:url].host, args[:url].port)
+      else
+        http = Net::HTTP.new(args[:url].host, args[:url].port)
+      end
+
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = nil

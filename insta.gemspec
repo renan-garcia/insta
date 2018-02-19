@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'insta/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'insta'
+  spec.name          = 'insta(pre-alpha)'
   spec.version       = Insta::VERSION
   spec.authors       = ['Renan Garcia']
   spec.email         = ['email@renangarcia.me']
 
-  spec.summary       = 'Welcome to Insta gem! This Gem is hard fork from vicoerv/instagram-private-api and the implement from huttarichard/instagram-private-api'
+  spec.summary       = 'Welcome to Insta(pre-alpha) gem! This Gem is hard fork from vicoerv/instagram-private-api and the implement from huttarichard/instagram-private-api'
   spec.description   = spec.summary
   spec.homepage      = 'http://renangarcia.me'
   spec.license       = 'MIT'
