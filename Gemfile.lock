@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    insta (0.2.3)
+    insta (0.2.4)
 
 GEM
   remote: https://rubygems.org/

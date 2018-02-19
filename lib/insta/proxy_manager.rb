@@ -13,7 +13,7 @@ class ProxyManager
   end
 
   def next
-    return nil if @proxys.nil?
+    return nil if @proxys.nil? || @proxys.empty?
     next_proxy = @proxys.sort_by { |proxy| proxy[:last_use] }.first
     next_proxy[:last_use] = Time.now
     next_proxy
