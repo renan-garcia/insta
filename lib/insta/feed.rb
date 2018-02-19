@@ -4,7 +4,7 @@ module Insta
       user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
       rank_token = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       endpoint = "https://i.instagram.com/api/v1/feed/user/#{user_id}/"
-      proxys = ProxyManager.new data[:proxys] unless data[:proxys].nil?
+      proxys = Insta::ProxyManager.new data[:proxys] unless data[:proxys].nil?
       param = "?rank_token=#{rank_token}" +
               (!data[:max_id].nil? ? '&max_id=' + data[:max_id] : '')
       result = Insta::API.http(
@@ -20,7 +20,7 @@ module Insta
     def self.user_media_graphql(user, data)
       user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
       endpoint = "https://www.instagram.com/graphql/query/?query_id=17880160963012870&id=#{user_id}&first=80&after="
-      proxys = ProxyManager.new data[:proxys] unless data[:proxys].nil?
+      proxys = Insta::ProxyManager.new data[:proxys] unless data[:proxys].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
@@ -36,7 +36,7 @@ module Insta
       has_next_page = true
       followers = []
       user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
-      proxys = ProxyManager.new data[:proxys] unless data[:proxys].nil?
+      proxys = Insta::ProxyManager.new data[:proxys] unless data[:proxys].nil?
       data[:rank_token] = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       while has_next_page && limit > followers.size
         response = user_followers_next_page(user, user_id, data, proxys)
@@ -51,7 +51,7 @@ module Insta
       has_next_page = true
       followers = []
       user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
-      proxys = ProxyManager.new data[:proxys] unless data[:proxys].nil?
+      proxys = Insta::ProxyManager.new data[:proxys] unless data[:proxys].nil?
       while has_next_page && limit > followers.size
         response = user_followers_graphql_next_page(user, user_id, data, proxys)
         has_next_page = response['data']['user']['edge_followed_by']['page_info']['has_next_page']
