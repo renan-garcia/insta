@@ -23,12 +23,12 @@ module Insta
       @config = config
     end
 
-    def search_for_user (username)
-      Insta::Account.search_for_user(self, username)
+    def search_for_user (username, data = {})
+      Insta::Account.search_for_user(self, username, data)
     end
 
-    def search_for_user_graphql (username)
-      Insta::Account.search_for_graphql(self, username)
+    def search_for_user_graphql (username, data = {})
+      Insta::Account.search_for_user_graphql(self, username, data)
     end
 
     def user_media(data = {})

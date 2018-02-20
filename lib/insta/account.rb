@@ -34,12 +34,14 @@ module Insta
       user.session = cookies
     end
 
-    def self.search_for_user_graphql(user, username)
+    def self.search_for_user_graphql(user, username, data)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
-        user: user
+        user: user,
+        proxy: proxies&.next
       )
       response = JSON.parse result.body, symbolize_names: true
       return nil unless response[:user].any?
@@ -59,14 +61,16 @@ module Insta
       }
     end
 
-    def self.search_for_user(user, username)
+    def self.search_for_user(user, username, data)
       rank_token = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       endpoint = 'https://i.instagram.com/api/v1/users/search/'
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       param = format('?is_typehead=true&q=%s&rank_token=%s', username, rank_token)
       result = Insta::API.http(
         url: endpoint + param,
         method: 'GET',
-        user: user
+        user: user,
+        proxy: proxies&.next
       )
 
       json_result = JSON.parse result.body
