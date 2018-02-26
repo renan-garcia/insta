@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Welcome to Insta(pre-alpha) gem! This Gem is hard fork from vicoerv/instagram-private-api and the implement from huttarichard/instagram-private-api'
   spec.description   = spec.summary
-  spec.homepage      = 'http://renangarcia.me'
+  spec.homepage      = 'https://github.com/renan-garcia/insta'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
