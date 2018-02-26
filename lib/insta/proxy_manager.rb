@@ -8,7 +8,7 @@ module Insta
     def initialize(proxies = [])
       proxies.each do |proxy|
         proxy[:id] = SecureRandom.uuid
-        proxy[:last_use] = nil
+        proxy[:last_use] = Time.now
       end
       @proxies = proxies
     end

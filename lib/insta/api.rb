@@ -7,6 +7,7 @@ require 'insta/user'
 require 'insta/account'
 require 'insta/feed'
 require 'insta/configuration'
+require 'insta/location'
 
 module Insta
   module API

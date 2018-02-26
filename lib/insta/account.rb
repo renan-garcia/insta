@@ -61,6 +61,39 @@ module Insta
       }
     end
 
+    def self.by_id(user, profile_id, data)
+      rank_token = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
+      endpoint = "https://i.instagram.com/api/v1/users/#{profile_id}/info/"
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      param = format('?is_typehead=true&rank_token=%s', rank_token)
+      result = Insta::API.http(
+        url: endpoint + param,
+        method: 'GET',
+        user: user,
+        proxy: proxies&.next
+      )
+
+      response = JSON.parse result.body, symbolize_names: true
+
+      return nil unless response[:user].any?
+      {
+        profile_id: response[:user][:id],
+        external_url: response[:user][:external_url],
+        followers: response[:user][:follower_count],
+        following: response[:user][:following_count],
+        full_name: response[:user][:full_name],
+        avatar_url: response[:user][:hd_profile_pic_url_info][:url],
+        avatar_url_hd: response[:user][:hd_profile_pic_url_info][:url],
+        username: response[:user][:username],
+        biography: response[:user][:biography],
+        verified: response[:user][:is_verified],
+        medias_count: response[:user][:media_count],
+        is_private: response[:user][:is_private],
+        phone: response[:user][:contact_phone_number],
+        email: response[:user][:public_email]
+      }
+    end
+
     def self.search_for_user(user, username, data)
       rank_token = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       endpoint = 'https://i.instagram.com/api/v1/users/search/'
