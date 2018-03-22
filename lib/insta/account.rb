@@ -36,27 +36,28 @@ module Insta
 
     def self.search_for_user_graphql(username, data)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
-      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      proxies = ::Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
         proxy: proxies&.next
       )
       response = JSON.parse result.body, symbolize_names: true
-      return nil unless response[:user].any?
+      user = response.dig(:graphql).dig(:user)
+      return nil unless user.any?
       {
-        profile_id: response[:user][:id],
-        external_url: response[:user][:external_url],
-        followers: response[:user][:followed_by][:count],
-        following: response[:user][:follows][:count],
-        full_name: response[:user][:full_name],
-        avatar_url: response[:user][:profile_pic_url],
-        avatar_url_hd: response[:user][:profile_pic_url_hd],
-        username: response[:user][:username],
-        biography: response[:user][:biography],
-        verified: response[:user][:is_verified],
-        medias_count: response[:user][:media][:count],
-        is_private: response[:user][:is_private]
+        profile_id: user.dig(:id),
+        external_url: user.dig(:external_url),
+        followers: user.dig(:edge_followed_by).dig(:count),
+        following: user.dig(:edge_follow).dig(:count),
+        full_name: user.dig(:full_name),
+        avatar_url: user.dig(:profile_pic_url),
+        avatar_url_hd: user.dig(:profile_pic_url_hd),
+        username: user.dig(:username),
+        biography: user.dig(:biography),
+        verified: user.dig(:is_verified),
+        medias_count: user.dig(:edge_owner_to_timeline_media).dig(:count),
+        is_private: user.dig(:is_private)
       }
     end
 
