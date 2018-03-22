@@ -34,13 +34,12 @@ module Insta
       user.session = cookies
     end
 
-    def self.search_for_user_graphql(user, username, data)
+    def self.search_for_user_graphql(username, data)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
-        user: user,
         proxy: proxies&.next
       )
       response = JSON.parse result.body, symbolize_names: true
