@@ -44,7 +44,7 @@ module Insta
       )
       response = JSON.parse result.body, symbolize_names: true
       user = response.dig(:graphql).dig(:user)
-      return nil unless user.any?
+      return nil if user.nil?
       {
         profile_id: user.dig(:id),
         external_url: user.dig(:external_url),
