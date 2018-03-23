@@ -47,6 +47,17 @@ module Insta
       limit.infinite? ? followers : followers[0...limit]
     end
 
+    def self.media_info_graphql(shortcode, data)
+      endpoint = "https://www.instagram.com/p/#{shortcode}/?__a=1"
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      result = Insta::API.http(
+        url: endpoint,
+        method: 'GET',
+        proxy: proxies&.next
+      )
+      JSON.parse result.body, symbolize_names: true
+    end
+
     def self.user_followers_graphql(user, data, limit)
       has_next_page = true
       followers = []
@@ -70,7 +81,7 @@ module Insta
         user: user,
         proxy: proxies&.next
       )
-      JSON.parse result.body
+      JSON.parse result.body , symbolize_names: true
     end
 
     def self.user_followers_next_page(user, user_id, data, proxies)
