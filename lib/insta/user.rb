@@ -13,6 +13,12 @@ module Insta
     attr_writer :session
     attr_reader :config
     attr_writer :config
+    attr_reader :error
+    attr_writer :error
+    attr_reader :error_html
+    attr_writer :error_html
+    attr_reader :exception_message
+    attr_writer :exception_message
 
     def initialize(username, password, session = nil, data = nil, config = nil)
       @username = username

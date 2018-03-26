@@ -1,3 +1,3 @@
 module Insta
-  VERSION = '0.2.9d'.freeze
+  VERSION = '0.2.9j'.freeze
 end
