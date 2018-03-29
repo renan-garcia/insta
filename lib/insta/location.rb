@@ -6,7 +6,6 @@ module Insta
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
-        user: user,
         proxy: proxies&.next
       )
 
