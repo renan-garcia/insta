@@ -33,7 +33,6 @@ module Insta
           cookies_array.push(cookie.split('; ')[0])
         end
         cookies = cookies_array.join('; ')
-        user.config = config
         user.session = cookies
       rescue StandardError => error
         user.error = true

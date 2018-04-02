@@ -17,19 +17,17 @@ module Insta
       JSON.parse result.body
     end
 
-    def self.user_media_graphql(user, data)
-      user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
-      endpoint = "https://www.instagram.com/graphql/query/?query_id=17880160963012870&id=#{user_id}&first=80&after="
+    def self.user_media_graphql(data)
+      endpoint = %(https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={"id":"#{data[:id]}","first":80,"after":""})
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
-        user: user,
         proxy: proxies&.next,
         desktop: true
       )
 
-      JSON.parse result.body
+      JSON.parse result.body, symbolize_names: true
     end
 
     def self.user_followers(user, data, limit)
@@ -65,9 +63,9 @@ module Insta
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       while has_next_page && limit > followers.size
         response = user_followers_graphql_next_page(user, user_id, data, proxies)
-        has_next_page = response['data']['user']['edge_followed_by']['page_info']['has_next_page']
-        data[:end_cursor] = response['data']['user']['edge_followed_by']['page_info']['end_cursor']
-        followers += response['data']['user']['edge_followed_by']['edges']
+        has_next_page = response[:data][:user][:edge_followed_by][:page_info][:has_next_page]
+        data[:end_cursor] = response[:data][:user][:edge_followed_by][:page_info][:end_cursor]
+        followers += response[:data][:user][:edge_followed_by][:edges]
       end
       limit.infinite? ? followers : followers[0...limit]
     end
