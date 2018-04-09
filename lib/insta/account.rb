@@ -1,5 +1,13 @@
 module Insta
   module Account
+
+    def self.valid_json?(json)
+      JSON.parse(json)
+      return true
+    rescue JSON::ParserError => e
+      return false
+    end
+
     def self.login(user, data)
       begin
         proxies = ::Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
@@ -44,11 +52,7 @@ module Insta
     def self.search_for_user_graphql(username, data)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
       proxies = ::Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
-      result = Insta::API.http(
-        url: endpoint,
-        method: 'GET',
-        proxy: proxies&.next
-      )
+      result = Insta::API.http(url: endpoint,method: 'GET',proxy: proxies&.next)
       response = JSON.parse result.body, symbolize_names: true
       user = response.dig(:graphql).dig(:user)
       return nil if user.nil?
@@ -83,8 +87,11 @@ module Insta
         user: user,
         proxy: proxies&.next
       )
-
-      response = JSON.parse result.body, symbolize_names: true
+      if valid_json?(result.body)
+        response = JSON.parse result.body, symbolize_names: true 
+      else
+        { error: true, status: result.header.code, body: result.body }
+      end
     end
 
     def self.search_for_user(user, username, data)

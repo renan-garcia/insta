@@ -66,7 +66,7 @@ module Insta
         {
           :'User-Agent' => Insta::CONSTANTS::HEADER[:user_agent_desktop],
           :Accept => Insta::CONSTANTS::HEADER[:accept],
-          :Cookie => (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session)
+          :Cookie => ('ig_pr=1' + (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session))
         }
       else
         {
@@ -76,7 +76,7 @@ module Insta
           :'Accept-Language' => args.dig(:user)&.language,
           :'X-IG-Capabilities' => Insta::CONSTANTS::HEADER[:capabilities],
           :'X-IG-Connection-Type' => Insta::CONSTANTS::HEADER[:type],
-          :Cookie => (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session)
+          :Cookie => ('ig_pr=1' + (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session))
         }
       end
     end
