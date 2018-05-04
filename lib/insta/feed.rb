@@ -17,12 +17,13 @@ module Insta
       JSON.parse result.body
     end
 
-    def self.user_media_graphql(data)
-      endpoint = %(https://www.instagram.com/graphql/query/?query_hash=ac38b90f0f3981c42092016a37c59bf7&variables={"id":"#{data[:id]}","first":80,"after":""})
+    def self.user_media_graphql(user, data)
+      endpoint = %(https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={"id":"#{data[:id]}","first":80,"after":""})
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
+        user: user,
         proxy: proxies&.next,
         desktop: true
       )
