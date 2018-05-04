@@ -50,24 +50,19 @@ module Insta
     end
 
     def self.search_for_user_graphql(username, data)
-      endpoint = "https://www.instagram.com/#{username}/?__a=1"
+      endpoint = "https://www.instagram.com/web/search/topsearch/?context=blended&query=#{username}&rank_token=0.3953592318270893&count=0"
       proxies = ::Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(url: endpoint,method: 'GET',proxy: proxies&.next)
       response = JSON.parse result.body, symbolize_names: true
-      user = response.dig(:graphql).dig(:user)
+      user = (response.dig(:users).any? ? response.dig(:users).first.dig(:user) : nil)
       return nil if user.nil?
       {
-        profile_id: user.dig(:id),
-        external_url: user.dig(:external_url),
-        followers: user.dig(:edge_followed_by).dig(:count),
-        following: user.dig(:edge_follow).dig(:count),
+        profile_id: user.dig(:pk),
+        followers: user.dig(:follower_count),
         full_name: user.dig(:full_name),
         avatar_url: user.dig(:profile_pic_url),
-        avatar_url_hd: user.dig(:profile_pic_url_hd),
         username: user.dig(:username),
-        biography: user.dig(:biography),
         verified: user.dig(:is_verified),
-        medias_count: user.dig(:edge_owner_to_timeline_media).dig(:count),
         is_private: user.dig(:is_private)
       }
     end
