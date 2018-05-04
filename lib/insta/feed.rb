@@ -72,10 +72,9 @@ module Insta
     end
 
     def self.user_followers_graphql_next_page(user, user_id, data, proxies)
-      endpoint = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&id=#{user_id}&first=5000"
-      param = (!data[:end_cursor].nil? ? "&after=#{data[:end_cursor]}" : '')
+      endpoint = %Q(https://www.instagram.com/graphql/query/?query_hash=37479f2b8209594dde7facb0d904896a&variables={"id":"#{user_id}","first":5000,"after":"#{data[:end_cursor]}"})
       result = Insta::API.http(
-        url: endpoint + param,
+        url: endpoint,
         method: 'GET',
         user: user,
         proxy: proxies&.next
