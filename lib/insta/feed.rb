@@ -31,21 +31,6 @@ module Insta
       JSON.parse result.body, symbolize_names: true
     end
 
-    def self.user_followers(user, data, limit)
-      has_next_page = true
-      followers = []
-      user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
-      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
-      data[:rank_token] = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
-      while has_next_page && limit > followers.size
-        response = user_followers_next_page(user, user_id, data, proxies)
-        has_next_page = !response['next_max_id'].nil?
-        data[:max_id] = response['next_max_id']
-        followers += response['users']
-      end
-      limit.infinite? ? followers : followers[0...limit]
-    end
-
     def self.media_info_graphql(shortcode, data)
       endpoint = "https://www.instagram.com/p/#{shortcode}/?__a=1"
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
@@ -72,7 +57,7 @@ module Insta
     end
 
     def self.user_followers_graphql_next_page(user, user_id, data, proxies)
-      endpoint = %Q(https://www.instagram.com/graphql/query/?query_hash=37479f2b8209594dde7facb0d904896a&variables={"id":"#{user_id}","first":5000,"after":"#{data[:end_cursor]}"})
+      endpoint = %Q(https://www.instagram.com/graphql/query/?query_hash=37479f2b8209594dde7facb0d904896a&variables={"id":"#{user_id}","first":50,"after":"#{data[:end_cursor]}"})
       result = Insta::API.http(
         url: endpoint,
         method: 'GET',
@@ -80,6 +65,21 @@ module Insta
         proxy: proxies&.next
       )
       JSON.parse result.body , symbolize_names: true
+    end
+
+    def self.user_followers(user, data, limit)
+      has_next_page = true
+      followers = []
+      user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      data[:rank_token] = Insta::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
+      while has_next_page && limit > followers.size
+        response = user_followers_next_page(user, user_id, data, proxies)
+        has_next_page = !response['next_max_id'].nil?
+        data[:max_id] = response['next_max_id']
+        followers += response['users']
+      end
+      limit.infinite? ? followers : followers[0...limit]
     end
 
     def self.user_followers_next_page(user, user_id, data, proxies)
