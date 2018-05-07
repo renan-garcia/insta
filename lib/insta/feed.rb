@@ -18,7 +18,7 @@ module Insta
     end
 
     def self.user_media_graphql(user, data)
-      endpoint = %(https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={"id":"#{data[:id]}","first":80,"after":""})
+      endpoint = %(https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={"id":"#{data[:id]}","first":50,"after":""})
       proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
       result = Insta::API.http(
         url: endpoint,
