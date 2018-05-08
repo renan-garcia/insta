@@ -28,7 +28,7 @@ module Insta
         desktop: true
       )
 
-      JSON.parse result.body, symbolize_names: true
+      JSON.parse result.body, symbolize_names: true, quirks_mode: true
     end
 
     def self.media_info_graphql(shortcode, data)
