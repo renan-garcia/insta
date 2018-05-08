@@ -82,6 +82,8 @@ module Insta
         has_next_page = response[:data][:user][:edge_followed_by][:page_info][:has_next_page]
         data[:end_cursor] = response[:data][:user][:edge_followed_by][:page_info][:end_cursor]
         followers += response[:data][:user][:edge_followed_by][:edges]
+        p "Likers capturados #{followers.size} de #{limit}"
+        p "Aguardando...(5 sec)"
         sleep(Insta::CONSTANTS::SLEEP_TIME)
       end
       limit.infinite? ? followers : followers[0...limit]
@@ -109,6 +111,8 @@ module Insta
         has_next_page = !response['next_max_id'].nil?
         data[:max_id] = response['next_max_id']
         followers += response['users']
+        p "Likers capturados #{followers.size} de #{limit}"
+        p "Aguardando...(5 sec)"
         sleep(Insta::CONSTANTS::SLEEP_TIME)
       end
       limit.infinite? ? followers : followers[0...limit]
