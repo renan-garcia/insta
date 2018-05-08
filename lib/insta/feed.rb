@@ -42,6 +42,36 @@ module Insta
       JSON.parse result.body, symbolize_names: true
     end
 
+    def self.media_likes_graphql(user, shortcode, data, limit)
+      has_next_page = true
+      likers = []
+      user_id = (!data[:id].nil? ? data[:id] : user.data[:id])
+      proxies = Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      while has_next_page && limit > likers.size
+        response = media_likes_graphql_next_page(user, shortcode, data, proxies)
+        has_next_page = response.dig(:data, :shortcode_media, :edge_liked_by, :page_info, :has_next_page)
+        data[:end_cursor] = response.dig(:data, :shortcode_media, :edge_liked_by, :page_info, :end_cursor)
+        likers += response.dig(:data, :shortcode_media, :edge_liked_by, :edges)
+        p "Likers capturados #{likers.size}"
+        p "Aguardando...(5 sec)"
+        sleep(Insta::CONSTANTS::SLEEP_TIME)
+      end
+      limit.infinite? ? likers : likers[0...limit]
+    end
+
+    def self.media_likes_graphql_next_page(user, shortcode, data, proxies)
+      endpoint = %Q(https://www.instagram.com/graphql/query/?query_hash=1cb6ec562846122743b61e492c85999f&variables={"shortcode":"#{shortcode}","first":50,"after":"#{data[:end_cursor]}"})
+      result = Insta::API.http(
+        url: endpoint,
+        method: 'GET',
+        user: user,
+        proxy: proxies&.next
+      )
+      JSON.parse result.body , symbolize_names: true
+    end
+
+
+    
     def self.user_followers_graphql(user, data, limit)
       has_next_page = true
       followers = []
@@ -52,13 +82,14 @@ module Insta
         has_next_page = response[:data][:user][:edge_followed_by][:page_info][:has_next_page]
         data[:end_cursor] = response[:data][:user][:edge_followed_by][:page_info][:end_cursor]
         followers += response[:data][:user][:edge_followed_by][:edges]
+        sleep(Insta::CONSTANTS::SLEEP_TIME)
       end
       limit.infinite? ? followers : followers[0...limit]
     end
 
     def self.user_followers_graphql_next_page(user, user_id, data, proxies)
       endpoint = %Q(https://www.instagram.com/graphql/query/?query_hash=37479f2b8209594dde7facb0d904896a&variables={"id":"#{user_id}","first":50,"after":"#{data[:end_cursor]}"})
-      result = Insta::API.http(
+      result = ::Insta::API.http(
         url: endpoint,
         method: 'GET',
         user: user,
@@ -78,6 +109,7 @@ module Insta
         has_next_page = !response['next_max_id'].nil?
         data[:max_id] = response['next_max_id']
         followers += response['users']
+        sleep(Insta::CONSTANTS::SLEEP_TIME)
       end
       limit.infinite? ? followers : followers[0...limit]
     end
