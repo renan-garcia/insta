@@ -53,9 +53,8 @@ module Insta
       if args[:method] == 'POST'
         request = Net::HTTP::Post.new(args[:url].path)
       elsif args[:method] == 'GET'
-        request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
+        request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? && args[:url].query ? '?' + args[:url].query : ''))
       end
-
       request.initialize_http_header(self.http_header(args))
       request.body = args.key?(:body) ? args[:body] : nil
       http.request(request)

@@ -67,6 +67,17 @@ module Insta
       }
     end
 
+    def self.search_for_user_scrap(username, data)
+      endpoint = "https://www.instagram.com/#{username}/"
+      proxies = ::Insta::ProxyManager.new data[:proxies] unless data[:proxies].nil?
+      result = Insta::API.http(url: endpoint,method: 'GET',proxy: proxies&.next)
+      
+      data1 = result.body.split('window._sharedData = ')[1]
+      data_js = data1.split(';</script>')[0] if data1
+      response = JSON.parse data_js, symbolize_names: true
+      response.dig(:entry_data, :ProfilePage, 0, :graphql, :user)
+    end
+
     def self.by_id( profile_id, data, user = nil)
       if user.nil?
         rank_token = nil

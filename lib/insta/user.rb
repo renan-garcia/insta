@@ -37,6 +37,10 @@ module Insta
       Insta::Account.search_for_user_graphql(self, username, data)
     end
 
+    def search_for_user_scrap (username, data = {})
+      Insta::Account.search_for_user_scrap(self, username, data)
+    end
+
     def user_media(data = {})
       Insta::Feed.user_media(self, data)
     end
